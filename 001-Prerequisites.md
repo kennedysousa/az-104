@@ -1,4 +1,4 @@
-# Prerequisites for Azure administrators
+# Configure Azure resources with tools
 
 ## Azure Portal
 
@@ -60,3 +60,6 @@ If you already know the name of the command but need detailed information, use `
 ```bash
 az storage blob --help
 ```
+
+# Use Azure Resource Manager
+
