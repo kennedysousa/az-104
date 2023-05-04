@@ -63,3 +63,218 @@ az storage blob --help
 
 # Use Azure Resource Manager
 
+The infrastructure for your solutions is typically made up of many components. There components are not separate entities, instead they are related and interdependent parts of a single entity. You want to deploy, manage, and monitor them as a group.
+
+Azure REsource Manager enables you to work with the resources in your solution as a group. You can deploy, update, or delete all the resources for your solution in a single, coordinated operation. You use a template for deployment and that template can work for different environments such as testing, staging, and production.
+
+Azure Resource Manager provides security, auditing, and tagging features to help you manage your resources after deployment.
+
+## Benefits
+
+Azure Resource Manager provides several benefits:
+
+- You can deploy, manage, and monitor all the resources for your **solution as a group**.
+- You can repeatedly deploy your solution throughout the development lifecycle and have confidence that your resources are **deployed consistently**.
+- You can manage your infrastructure through **declarative templates** rather than scripts.
+- You can define the dependencies between resources so they are deployed in the correct order.
+- RBAC is natively integrated into the management platform.
+- You can apply tags to resources to logically organize all the resources in your subscription.
+- You can clarify your organization's billing by viewing costs for a group of resources sharing the same tag.
+
+## Guidance
+
+- Define and deploy your infrastructure through the declarative syntax in Azure Resource Manager templates, rather than through imperative commands.
+- Define all deployment and configuration steps in the template. You should have no manual steps for setting up your solution.
+- Run imperative commands to manage your resources, such as to start or stop an app or machine.
+- Arrange resources with the same lifecycle in a resource group.
+- Use tags for organizing the resources.
+
+## Review Azure resource terminology
+
+- **resource:** a manageable item that is available through Azure, such as VM, storage account, web app, database, virtual network, and many others.
+- **resource group:** a container that holds related resources for an Azure solution. It can include all the resources for a solution, or only those resources that you want to manage as a group.
+- **resource provider:** a service that supplies the resources you can deploy and manage through Resource Manager, such as Microsoft.Compute, Microsoft.Storage, and Microsoft.Web.
+- **template:** A JSON file that defines one or more resources to deploy to a resource group. It also defines the dependencies between the deployed resources.
+
+### Resource providers
+
+Each resource provider offers a set of resources and operations for working with an Azure service.
+
+The name of a resource type is in the format {resource-provider}/{resource-type}, e.g. `Microsoft.KeyVault/vaults`.
+
+## Create resource groups
+
+Resources can be deployed to any new or existing resource groups. Deployments are increamental - if a resource group contains two web apps and you decide to deploy a third, the existing web apps will not be removed.
+
+### Considerations
+
+Resource Groups are at their simplest a logical collection of resources. There are a few rules for resource groups.
+
+- Resources can only exist in one resource group.
+- Resource Groups cannot be renamed.
+- Resource Groups can have resources of many different types (services).
+- Resource Groups can have resources from many different regions.
+
+### Creating resource groups
+
+There are some important factors to consider when defining your resource group:
+
+- All the resources in your group should share the same lifecycle. You deploy, update, and delete them together. If one resource, such as a database server, needs to exist on a different deployment cycle it should be in another resource group.
+- Each resource can only exist in one resource group.
+- You can add or remove a resource to a resource group at any time.
+- You can move a resource from one resource group to another group. Limitations do apply to moving resources.
+- A resource group can contain resources that reside in different regions.
+- A resource group can be used to scope access control for administrative actions.
+- A resource can interact with resources in other resource groups. This interaction is common when the two resources are related but don't share the same lifecycle (for example, web apps connecting to a database).
+
+When creating a resource group you must provide a location for that resource group (i.e. where the metadata about that resource is stored). The resources can have different locations that the resource group.
+
+> **Note:** by scoping permissions to a resource group, you can add/remove and modify resources easily without having to recreate assignments and scopes.
+
+## Create Azure Resource Manager locks
+
+A common concern with resources provisioned in Azure is the ease with which they can be deleted. Resource Manager locks allow organizations to put a structure in place that prevents the accidental deletion of resources in Azure.
+
+- You can associate the lock with a subscription, resource group, or resource.
+- Locks are inherited by child resources.
+
+There are two types of resource locks:
+
+- **Read-Only locks**, which prevent any changes to the resource.
+- **Delete locks**, which prevent deletion.
+
+> **Note:** only the *Owner* and *User Access Administrator* roles can create or delete management locks.
+
+## Reorganize Azure resources
+
+Sometimes you may need to move resources to either a new subscription or a new resource group in the same subscription.
+
+When moving resources, both the source group and the target group are locked during the operation. Write and delete operations are blocked on the resource groups until the move completes. This lock means you can't add, update, or delete resources in the resource groups. Locks don't mean the resources aren't available. For example, if you move a virtual machine to a new resource group, an application can still access the virtual machine.
+
+### Implementation
+
+To move resources, select the resource group containing the resources, and then select the **Move** button. Select the resources to move and the destination resource group. Acknowledge that you need to update scripts.
+
+> **Note:** just because a service can be moved doesn't mean there aren't restrictions. For example, you can move a virtual network, but you must also move its dependent resources, like gateways.
+
+### Remove resources and resource groups
+
+Use caution when deleting a resource group. Deleting a resource group deletes all the resources contained within it. That resource group might contain resources that resources in other resource groups depend on.
+
+To remove a resource group using PowerShell, use the cmdlet `Remove-AzResourceGroup -Name <name>`.
+
+You can also delete individual resources within a resource group or move them to another resource group.
+
+## Determine resource limits
+
+Azure lets you view resource usage agains limits. This is helpful to track current usave, and plan for future use.
+
+- The limits shown are the limits for your subscription.
+- When you need to increase a default limit, there is a Request Increase link.
+- All resources have a maximum limit listed in Azure limits.
+- If you are at the maximum limit, the limit can't be increased.
+
+# Configure resources with Azure Resource Manager templates
+
+## Review Azure Resource Manager template advantages
+
+An Azure Resource Manager template precisely defines all the Resource Manager resources in a deployment. You can deploy a Resource Manager template into a resource group as a single operation.
+
+Using Resource Manager templates will make your deployments faster and more repeatable.
+
+### Templates benefits
+
+- Improve consistency
+- Help express complex deployments
+- Reduce manual, error-prone tasks
+- Can be shared, tested, and versioned as code
+- Promote reuse
+- Are linkable
+- Simplify orchestration
+
+## Explore the Azure Resource Manager template schema
+
+Azure Resource Manager templates are written in JSON, which allows you to express data stored as an object in text.
+
+A JSON document is essentially a collection of key-value pairs. Each key is a string, whose value can be a string, a number, a Boolean expression, a list of values, or an object.
+
+A Resource Manager template can contain sections that are expressed using JSON notation, but aren't related to the JSON language itself:
+
+```json
+{
+    "$schema": "http://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "",
+    "parameters": {},
+    "variables": {},
+    "functions": [],
+    "resources": [],
+    "outputs": {}
+}
+```
+
+| Element name | Required | Description |
+| ------------ | -------- | ----------- |
+| $schema | Yes | Location of the JSON schema file that describes the version of the template language. |
+| contentVersion | Yes | Version of the template (such as 1.0.0.0). You can provide any value for this element. Use this value to document significant changes in your template. This value can be used to make sure that the right template is being used.|
+| parameters | No | Values that are provided when deployment is executed to customize resource deployment. |
+| variables | No | Values that are used as JSON fragments in the template to simplify template language expressions. |
+| functions | No | User-defined functions that are available within the template. |
+| resources | Yes | Resource types that are deployed or updated in a resource group. |
+| outputs | No | Values that are returned after deployment. |
+
+## Explore the Azure Resource Manager template parameters
+
+In the parameters section of the template, you specify which values you can input when deploying the resources. The available properties for a parameter are:
+
+```json
+"parameters": {
+    "<parameter-name>" : {
+        "type" : "<type-of-parameter-value>",
+        "defaultValue": "<default-value-of-parameter>",
+        "allowedValues": [ "<array-of-allowed-values>" ],
+        "minValue": "<minimum-value-for-int>",
+        "maxValue": "<maximum-value-for-int>",
+        "minLength": "<minimum-length-for-string-or-array>",
+        "maxLength": "<maximum-length-for-string-or-array-parameters>",
+        "metadata": {
+            "description": "<description-of-the parameter>"
+        }
+    }
+}
+```
+
+Here's an example that illustrates two parameters: one for a virtual machine's username, and one for its password:
+
+```json
+"parameters": {
+  "adminUsername": {
+    "type": "string",
+    "metadata": {
+      "description": "Username for the Virtual Machine."
+    }
+  },
+  "adminPassword": {
+    "type": "securestring",
+    "metadata": {
+      "description": "Password for the Virtual Machine."
+    }
+  }
+}
+```
+
+> **Note:** you're limited to 256 parameters in a template. You can reduce the number of parameters by using objects that contain multiple properties.
+
+## Consider Bicep templates
+
+Azure Bicep is a domain-specific language (DSL) that uses declarative syntax to deploy Azure resources. It provides concise syntax, reliable type safety, and support for code reuse.
+
+You can use Bicep instead of JSON to develop your Azure Resource Manager templates (ARM templates).
+
+When you deploy a resource or series of resources to Azure, you submit the Bicep template to Resource Manager, which still requires JSON templates. The tooling that's built into Bicep transpiles, i.e., converts your Bicep template into a JSON template.
+
+Bicep provides many improvements over JSON for template authoring, including:
+
+- **Simpler syntax:** string interpolation, references using symbolic names, etc.
+- **Modules:** you can break down complex template deployments into smaller module files and reference them in a main template.
+- **Automatic dependency management:** in most situations, Bicep automatically detects dependencies between your resources.
+- **Type validation and IntelliSense:** the Bicep extension for Visual Studio Code features rich validation and IntelliSense for all Azure resource type API definitions.
