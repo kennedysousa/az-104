@@ -303,3 +303,89 @@ There's approximate parity between the portal, the Azure CLI, and Azure PowerShe
 
 ## Create an Azure Resource using scripts in Azure PowerShell
 
+Beginning with PowerShell 3.0, modules are loaded automatically when you use a cmdlet within the module. It's no longer necessary to manually import PowerShell modules unless you've changed the default module autoloading settings.
+
+When you're working with a local install of Azure PowerShell, <u>you need to authenticate before you can execute Azure commands</u>. The `Connect-AzAccount` cmdlet prompts for your Azure credentials, then connects to your Azure subscription. It has many optional parameters, but if all you need is an interactive prompt, you don't need any parameters.
+
+Use `Get-AzSubscription` to <u>obtain a list of all subscription names in your account</u>.
+
+You can <u>change the subscription</u> by passing the name of the one to select.
+
+```PowerShell
+Set-AzContext -Subscription '00000000-0000-0000-0000-000000000000'
+```
+
+You can also <u>determine which subscription is active</u> by running `Get-AzContext`.
+
+Use `Get-AzResourceGroup` to <u>retrieve a list of all Resource Groups in the active subscription</u>.
+
+To get a more concise view, you can send the output from the `Get-AzResourceGroup` to the `Format-Table` cmdlet using a pipe '|':
+
+```PowerShell
+Get-AzResourceGroup | Format-Table
+```
+
+You can <u>create resource groups</u> by using the `New-AzResourceGroup` cmdlet. You must specify a name and location.
+
+As with most of the Azure cmdlets, `New-AzResourceGroup` has many optional parameters. However, the core syntax is:
+
+```PowerShell
+New-AzResourceGroup -Name <name> -Location <location>
+```
+
+### Create an Azure Virtual Machine
+
+Another common task you can do with PowerShell is to create VMs.
+
+Azure PowerShell provides the `New-AzVm` cmdlet to create a virtual machine. The cmdlet has many parameters to let it handle the large number of VM configuration settings. Most of the parameters have reasonable default values, so we only need to specify five things:
+
+- **ResourceGroupName:** The resource group into which the new VM should be placed.
+- **Name:** The name of the VM in Azure.
+- **Location:** Geographic location where the VM should be provisioned.
+- **Credential:** An object containing the username and password for the VM admin account. We use the Get-Credential cmdlet. This cmdlet prompts for a username and password and packages it into a credential object.
+- **Image:** The operating system image to use for the VM, which is typically a Linux distribution or Windows Server.
+
+```PowerShell
+New-AzVm
+  -ResourceGroupName <resource group name>
+  -Name <machine name>
+  -Credential <credentials object>
+  -Location <location>
+  -Image <image name>
+```
+You can supply these parameters directly to the cmdlet as shown in the previous example. Alternatively, you can use other cmdlets to configure the virtual machine, such as `Set-AzVMOperatingSystem`, `Set-AzVMSourceImage`, `Add-AzVMNetworkInterface`, and `Set-AzVMOSDisk`.
+
+Here's an example that strings the `Get-Credential` cmdlet together with the `-Credential` parameter:
+
+```PowerShell
+New-AzVM -Name MyVm -ResourceGroupName ExerciseResources -Credential (Get-Credential) ...
+```
+
+The `AzVM` suffix is specific to VM-based commands in PowerShell. THere are several others you can use:
+
+| Command | Description |
+| ------- | ----------- |
+| `Remove-AzVM` | Deletes an Azure VM |
+| `Start-AzVM` | Start a stopped VM |
+| `Stop-AzVM` | Stop a running VM |
+| `Restart-AzVM` | Restart a VM |
+| `Update-AzVM` | Updates the configuration for a VM |
+
+You can list the VMs in your subscription using the `Get-AzVM -Status` command. This command also supports entering a specific VM by including the `-Name` property. Here, we assign it to a PowerShell variable:
+
+```PowerShell
+$vm = Get-AzVM  -Name MyVM -ResourceGroupName ExerciseResources
+```
+
+The interesting thing is that now your VM is an object with which you can interact. For example, you can make changes to that object, then push changes back to Azure by using the `Update-AzVM` command:
+
+```PowerShell
+$ResourceGroupName = "ExerciseResources"
+$vm = Get-AzVM  -Name MyVM -ResourceGroupName $ResourceGroupName
+$vm.HardwareProfile.vmSize = "Standard_DS3_v2"
+
+Update-AzVM -ResourceGroupName $ResourceGroupName  -VM $vm
+```
+
+The interactive mode in PowerShell is appropriate for one-off tasks. In our example, we use the same resource group for the lifetime of the project, so creating it interactively is reasonable. Interactive mode is often quicker and easier for this task than writing a script and executing that script exactly once.
+
