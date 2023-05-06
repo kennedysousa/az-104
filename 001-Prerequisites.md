@@ -278,3 +278,28 @@ Bicep provides many improvements over JSON for template authoring, including:
 - **Modules:** you can break down complex template deployments into smaller module files and reference them in a main template.
 - **Automatic dependency management:** in most situations, Bicep automatically detects dependencies between your resources.
 - **Type validation and IntelliSense:** the Bicep extension for Visual Studio Code features rich validation and IntelliSense for all Azure resource type API definitions.
+
+# Automate Azure tasks using scripts with PowerShell
+
+Creating administration scripts is a powerfull way to optimize your work flow. You can automate common, repetitive tasks. Once a script has been verified, it will run consistently, likely reducing errors.
+
+## Decide if Azure PowerShell is right for your tasks
+
+Azure provides three administration tools:
+
+- Azure portal
+- Azure CLI
+- Azure PowerShell
+
+They all offer approximately the same amount of control; any task that you can do with one of the tools, you can likely do with the orther two. All three are cross-platform, running on Windows, macOS, and Linux. They differ in syntax, setup requirements, automation support.
+
+### How to Choose an administrative tool
+
+There's approximate parity between the portal, the Azure CLI, and Azure PowerShell with respect to the Azure objects they can administer and the configurations they can create. They're also all cross-platform. Typically, you'll consider several other factors when making your choice:
+
+- **Automation:** Azure PowerShell and Azure CLI support automation, while Azure portal doesn't.
+- **Learning curve:** The Azure portal doesn't require you to learn syntax or memorize commands. In Azure PowerShell and the Azure CLI, you must know the detailed syntax for each command you use.
+- **Team skillset:** Your team may have used PowerShell to administer Windows. If so, they'll quickly become comfortable using Azure PowerShell.
+
+## Create an Azure Resource using scripts in Azure PowerShell
+
