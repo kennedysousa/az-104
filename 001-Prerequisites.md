@@ -389,3 +389,19 @@ Update-AzVM -ResourceGroupName $ResourceGroupName  -VM $vm
 
 The interactive mode in PowerShell is appropriate for one-off tasks. In our example, we use the same resource group for the lifetime of the project, so creating it interactively is reasonable. Interactive mode is often quicker and easier for this task than writing a script and executing that script exactly once.
 
+## Create and save scripts in Azure PowerShell
+
+Complex or repetitive tasks often take a great deal of administrative time. Organizations prefer to automate these tasks to reduce costs and avoid errors.
+
+A PowerShell script is a text file containing commands and control constructs. The commands are invocations of cmdlets. The control constructs are programming features like loops, variables, parameters, comments, etc., supplied by PowerShell.
+
+PowerShell script files have a `.ps1` file extension. You can create and save these files with any text editor.
+
+> **Tip:** If you’re writing PowerShell scripts under Windows, you can use the Windows PowerShell Integrated Scripting Environment (ISE). This editor provides features such as syntax coloring and a list of available cmdlets.
+
+Once you've written the script, execute it from the PowerShell command line by passing the name of the file preceded by a dot and a backslash:
+
+```PowerShell
+.\myScript.ps1
+```
+
