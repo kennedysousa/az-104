@@ -405,3 +405,21 @@ Once you've written the script, execute it from the PowerShell command line by p
 .\myScript.ps1
 ```
 
+# Control Azure services with the CLI
+
+The Azure portal is great for performing single tasks and for seeing a quick overview of the state of your resources. However, for tasks that need to be repeated daily, or even hourly, using the command line and a set of tested commands or scripts can help get your work done more quickly and avoid errors.
+
+The Azure CLI is a command-line program to connect to Azure and execute administrative commands on Azure resources. It runs on Linux, macOS, and Windows, and allows administrators and developers to execute their commands through a terminal or command-line prompt (or script!) instead of a web browser. For example, to restart a virtual machine (VM), you would use the following command:
+
+```PowerShell
+az vm restart -g MyResourceGroup -n MyVm
+```
+
+On both Linux and macOS, you'll use a package manager to install the Azure CLI.
+
+On Windows, you can install the Azure CLI by downloading and running an MSI file.
+
+## Work with the Azure CLI
+
+
+
