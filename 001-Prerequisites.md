@@ -421,5 +421,24 @@ On Windows, you can install the Azure CLI by downloading and running an MSI file
 
 ## Work with the Azure CLI
 
+The Azure CLI lets you type commands and execute them immediately from the command line and lets you control nearly every aspect of every Azure resource.
 
+Commands in the CLI are structured in *groups* and *subgroups*. Each group represents a service provided by Azure, and the subgroups divide commands for these services into logical groupings.
 
+You can use `az find` to find the particular commands you need, e.g.:
+
+```PowerShell
+az find blob
+
+az find "az vm"
+
+az find "az vm create"
+```
+
+If you already know the name of the command you want, the `--help` argument for that command will get you more detailed information on the command, and a list of the available subcommands for a command group. For example:
+
+```PowerShell
+az storage blob --help
+```
+
+### How to create an Azure resource
