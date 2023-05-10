@@ -442,3 +442,30 @@ az storage blob --help
 ```
 
 ### How to create an Azure resource
+
+When you're creating a new Azure resource, there are typically three steps: connect to your Azure subscription, create the resource, and verify that creation was successful.
+
+If you are using a local install of the Azure CLI, you'll need to authenticate before you can execute Azure commands by using the Azure CLI `login` command.
+
+```PowerShell
+az login
+```
+
+The Azure CLI `group create` command creates a resource group. You must specify a name and location. The name must be unique within your subscription. The location determines where the metadata for your resource group will be stored.
+
+```PowerShell
+az group create --name <name> --location <location>
+```
+
+You can verify the newly created group by running one of the following commands:
+
+```PowerShell
+az group list
+
+# or with a more concise output
+
+az group list --output table
+```
+
+## Deploy Azure infrastructure by using JSON ARM templates
+
