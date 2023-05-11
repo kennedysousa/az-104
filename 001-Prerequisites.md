@@ -469,3 +469,25 @@ az group list --output table
 
 ## Deploy Azure infrastructure by using JSON ARM templates
 
+JSON Azure Resource Manager templates (ARM templates) allow you to specify your project's infrastructure in a declarative and reusable way. The templates can be versioned and saved in the same source control as your development project.
+
+*Infrastructure as code* enables you to describe, through code, the infrastructure that you need for your application.
+
+With infrastructure as code, you can maintain both your application code and everything you need to deploy your application in a central code repository. The advantages to infrastructure as code are:
+
+- Consistent configurations
+- Improved scalability
+- Faster deployments
+- Better traceability
+
+The template uses a declarative syntax. The declarative syntax is a way of building the structure and elements that outline what resources will look like without describing its control flow.
+
+The template code becomes part of your infrastructure and development projects. Just like application code, you can store the IaC files in a source repository and version it.
+
+ARM templates are idempotent, which means you can deploy the same template many times and get the same resource types in the same state.
+
+Resource Manager orchestrates the deployment of the resources so they're created in the correct order. When possible, resources will also be created in parallel, so ARM template deployments finish faster than scripted deployments.
+
+Resource Manager also has built-in validation. It checks the template before starting the deployment to make sure the deployment will succeed.
+
+If your deployments become more complex, you can break your ARM templates into smaller, reusable components. You can link these smaller templates together at deployment time. You can also nest templates inside other templates.
