@@ -491,3 +491,46 @@ Resource Manager orchestrates the deployment of the resources so they're created
 Resource Manager also has built-in validation. It checks the template before starting the deployment to make sure the deployment will succeed.
 
 If your deployments become more complex, you can break your ARM templates into smaller, reusable components. You can link these smaller templates together at deployment time. You can also nest templates inside other templates.
+
+##ARM template parameters
+
+ARM template parameters enable you to customize the deployment by providing values that are tailored for a particular environment.
+
+In the `parameters` section of the template, you specify which values you can input when you deploy the resources. You're limited to 256 parameters in a template. Parameter definitions can use most template functions.
+
+The available properties for a parameter are:
+
+```JSON
+"parameters": {
+  "<parameter-name>": {
+    "type": "<type-of-parameter-value>",
+    "defaultValue": "<default-value-of-parameter>",
+    "allowedValues": [
+      "<array-of-allowed-values>"
+    ],
+    "minValue": <minimum-value-for-int>,
+    "maxValue": <maximum-value-for-int>,
+    "minLength": <minimum-length-for-string-or-array>,
+    "maxLength": <maximum-length-for-string-or-array-parameters>,
+    "metadata": {
+      "description": "<description-of-the-parameter>"
+    }
+  }
+}
+```
+
+The allowed types of parameters are:
+
+- string
+- secureString
+- integers
+- boolean
+- object
+- secureObject
+- array
+
+Provide a description for each parameter, and use default values whenever possible.
+
+For security reasons, never hard code or provide default values for usernames and/or passwords in templates.
+
+Always use parameters for usernames and passwords (or secrets). Use secureString for all passwords and secrets. If you pass sensitive data in a JSON object, use the secureObject type.
