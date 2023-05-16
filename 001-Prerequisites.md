@@ -534,5 +534,3 @@ Provide a description for each parameter, and use default values whenever possib
 For security reasons, never hard code or provide default values for usernames and/or passwords in templates.
 
 Always use parameters for usernames and passwords (or secrets). Use secureString for all passwords and secrets. If you pass sensitive data in a JSON object, use the secureObject type.
-
-# Manage Identity and Governance on Azure
